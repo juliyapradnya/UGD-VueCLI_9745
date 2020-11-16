@@ -40,6 +40,11 @@
                     <v-btn small @click="detailItem(item)">
                         detail
                     </v-btn>
+
+                    <input type="checkbox" 
+                        v-model="item.delete" 
+                        style="margin-left: 200px;" @change="checked(item)">
+
                 </template>
                 
             </v-data-table>
@@ -86,9 +91,29 @@
                     Save
                 </v-btn>
             </v-card-actions>
+
         </v-card>
 
     </v-dialog>
+
+        <v-card>
+            <v-card-title>
+                <h3>Delete Multiple</h3>
+            </v-card-title>
+            <v-card-text>
+                <ul v-for="(todos, i) in selected" :key="i">
+                    <li>
+                       {{todos.task}} 
+                    </li>
+                </ul>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="red" @click="hapusAll">
+                Hapus Semua 
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+
 </v-main>
 </template>
 <script>
@@ -98,6 +123,7 @@ export default {
         return {
             search: null,
             dialog: false,
+            checkbox: true,
             headers: [
                 {
                     text: "Task",
@@ -127,11 +153,14 @@ export default {
                     note: "masak air 500ml",
                 },
             ],
+
             formTodo: {
                 task: null,
                 priority: null,
                 note: null,
             },
+
+            selected: [],
         };
     },
     methods: {
@@ -163,6 +192,20 @@ export default {
             this.formTodo = item;
             this.dialog = true;
         },
+        
+        hapusAll(){
+            this.todos = this.todos.filter(del=>!this.selected.includes(del));
+            this.selected = [];
+        },
+
+        checked(item){
+            if(this.selected.includes(item)) {
+                this.selected.splice(this.selected.indexOf(item), 1);
+            } else {
+                this.selected.push(item);
+            }
+        }
+
     },
 };
 </script>
